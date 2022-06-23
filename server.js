@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 const{ MongoClient, ObjectId } = require('mongodb')
 require('dotenv').config()
-const PORT = 8005
+const PORT = 5005
 
 
 // Mongo connection
