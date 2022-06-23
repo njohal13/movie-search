@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 const{ MongoClient, ObjectId } = require('mongodb')
 require('dotenv').config()
-const PORT = 5005
+const PORT = 5500
 
 
 // Mongo connection
@@ -29,31 +29,30 @@ app.use(cors())
 
 
 // First get request to get autocomplete results
-app.get('/search', async (req,res) => {
+app.get("/search", async (request,response) => {
     try {
         // bundle together results from collection into array
         let result = await collection.aggregate([
             {
-                "$Search" : {
+                "$search" : {
                     "autocomplete" : {
-                        "query" : `${request.query.query}` ,
-                        "path" : "title",
-                        "fuzzy" : {
+                        "query": `${request.query.query}`,
+                        "path": "title",
+                        "fuzzy": {
                             "maxEdits":2,
-                            "prefixLength" : 3,
+                            "prefixLength": 3
                         }
                     }
                 }
             }
         ]).toArray()
+        //console.log(result)
         // send result from db back to client
-        res.send(result)
-        
+        response.send(result)
     } catch (error) {
-        res.status(500).send({message: error.message})
-        
+        response.status(500).send({message: error.message})
+        //console.log(error)
     }
-
 })
 
 
@@ -76,3 +75,22 @@ app.get('/get/:id', async (req, res) => {
 app.listen(process.env.PORT || PORT, () => {
     console.log('Server is running')
 })
+
+
+//THIS IS THE INDEX TO APPLY TO MONGODB MOVIES COLLECTION
+// {
+//     "mappings": {
+//         "dynamic": false,
+//         "fields": {
+//             "title": [
+//                 {
+//                     "foldDiacritics": false,
+//                     "maxGrams": 7,
+//                     "minGrams": 3,
+//                     "tokenization": "edgeGram",
+//                     "type": "autocomplete"
+//                 }
+//             ]
+//         }
+//     }
+// }

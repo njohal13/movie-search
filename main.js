@@ -2,7 +2,7 @@
 $(document).ready(function () {
     $('#title').autocomplete({
         source: async function(request,response) {
-            let data = await fetch(`http://localhost:5005/search?query=${request.term}`)
+            let data = await fetch(`http://localhost:5500/search?query=${request.term}`)
                 .then(results => results.json())
                 .then(results => results.map(result => {
                     return {
@@ -16,13 +16,13 @@ $(document).ready(function () {
         minLength: 2,
         select: function(event, ui) {
             console.log(ui.item.id)
-            fetch(`http://localhost:5005/get/${ui.item.id}`)
+            fetch(`http://localhost:5500/get/${ui.item.id}`)
                 .then(result => result.json())
                 .then(result => {
                     $('#cast').empty()
                     result.cast.forEach(cast =>
                         {
-                            $(cast).append(`<li>${cast}</li>`)
+                            $('#cast').append(`<li>${cast}</li>`)
                         })
                         $('img').attr('src', result.poster) 
                         
